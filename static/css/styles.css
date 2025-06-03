@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    width: 100%;
+    padding: 12px 0;
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+    background-color: grey;
+}
+
+main {
+    width: 100%;
+    background-color: beige;
+    height: 90vh;
+    display: flex;
+    justify-content: space-between;
+}
+
+aside {
+    background-color: red;
+    width: 15%;
+    height: calc(100vh - 10vh);
+}
+
+section {
+    background-color: yellow;
+    width: 85%;
+    height: calc(100vh - 10vh);
+}
+
+article {
+    margin: 10px;
+    width: 85%;
+    border-radius: 10px;
+    height: 300px;
+    background-color: black;
+}
+
+ul {
+    list-style: none;
+}
+
+ul li {
+    margin: 10px;
+}
