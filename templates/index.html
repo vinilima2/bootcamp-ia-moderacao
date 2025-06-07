@@ -4,31 +4,210 @@
 <head>
   <title>Big Forum</title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
   <header>
-    <button>>>></button>
-    <h1>Fórum Atual</h1>
-    <button>Usuário</button>
+    <nav class="navbar is-black">
+      <div class="navbar-brand">
+        <a class="navbar-burger is-primary" role="button" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navBarButton" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="#"> <span class="icon">
+              <i class="fas fa-bars"></i>
+            </span> </a>
+        </div>
+
+        <div class="navbar-center m-2">
+          <h1 class="title is-4">BIG FORUM</h1>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <a class="button is-primary" href="#">
+                  <span class="icon">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <span>@{{usuario}}</span>
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main>
-    <aside>
-      <ul>
-        <li>Comida</li>
-        <li>Esporte</li>
-        <li>Estilo de vida</li>
-        <li>Moda</li>
-      </ul>
-    </aside>
-    <section>
-      <article>
+    <div class="columns">
+      <div class="column is-3 p-6 has-background-black">
+        <aside class="menu w-20">
+          <p class="menu-label">Meus Fóruns</p>
+          <ul class="menu-list">
+            <li><a>Esportes</a></li>
+            <li><a>Cultura</a></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="column is-9">
+        {% for post in posts %}
+        <section class="p-6 post">
+          <article class="card">
+            <div class="card-content">
+              <div class="card-header is-dark">
+                <h1 class="card-header-title title is-4">{{post.titulo}}</h1>
+                <h2 class="card-header-title subtitle is-6">@{{post.nome_usuario}} {{post.data_criacao}}</h2>
+                <button class="card-header-icon comentario" post-id="{{post.post_id}}">
+                  <span class="icon">
+                    <i class="fas fa-comment" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="card-content">
+                {{post.descricao}}
+              </div>
+              <form class="mt-4 is-hidden" id="form">
+                <div class="field">
+                  <div class="control">
+                    <textarea class="textarea" placeholder="Digite seu comentário"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
 
-      </article>
-    </section>
+            {% for resposta in post.respostas %}
+            <section class="p-3">
+              <article class="card">
+                <div class="card-header is-dark">
+                  <h1 class="card-header-title subtitle is-6">@{{resposta.nome_usuario}} {{resposta.data_criacao}}</h1>
+                </div>
+                <div class="card-content">
+                  <div class="content">
+                    {{resposta.descricao}}
+                  </div>
+                  <form class="mt-4 is-hidden" id="form">
+                    <div class="field">
+                      <div class="control">
+                        <textarea class="textarea" placeholder="Digite seu comentário"></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </article>
+            </section>
+            {% endfor %}
+          </article>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
   </main>
+
+  <div class="modal modal-post">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form action="/post/novo" method="POST">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Novo Post</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label">Título</label>
+            <div class="control">
+              <input class="input" autocomplete="off" type="text" name="titulo" maxlength="50" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <textarea class="textarea" placeholder="Digite seu comentário" name="descricao" required
+                maxlength="255"></textarea>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button is-success" type="submit">Enviar</button>
+            <button class="button" type="button" id="cancelar-post">Cancelar</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal modal-resposta">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form action="/resposta/novo" method="POST">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Resposta</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <input class="input is-hidden" id="post_id" autocomplete="off" type="text" name="post_id">
+            <div class="control">
+              <textarea class="textarea" placeholder="Digite seu comentário" name="descricao" required
+                maxlength="255"></textarea>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button is-success" type="submit">Enviar</button>
+            <button class="button" type="button" id="cancelar-resposta">Cancelar</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <button class="button is-large is-rounded is-primary" id="botao-novo-post">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <script>
+    document.getElementById('botao-novo-post')
+      .addEventListener('click',
+        () => document.querySelector('.modal-post')
+          .classList.toggle('is-active'))
+
+    document.getElementById('cancelar-post')
+      .addEventListener('click',
+        () => document.querySelector('.modal-post')
+          .classList.toggle('is-active'))
+
+    document.querySelectorAll('.comentario').forEach(element => {
+      element.addEventListener('click',
+        (event) => {
+          let postID = element.attributes.getNamedItem('post-id').value
+          document.getElementById('post_id').value = postID
+          document.querySelector('.modal-resposta')
+            .classList.toggle('is-active')
+        })
+    })
+
+
+    document.getElementById('cancelar-resposta')
+      .addEventListener('click',
+        () => document.querySelector('.modal-resposta')
+          .classList.toggle('is-active'))
+  </script>
 </body>
 
 </html>
