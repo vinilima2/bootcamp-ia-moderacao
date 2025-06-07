@@ -24,10 +24,9 @@ def analisar_comentario(comentario):
 
         # Extrai a resposta
         texto_resposta = resposta.choices[0].message.content.strip().lower()
-        aprovado = (texto_resposta == "não ofensivo")
 
         return {
-            "aprovado": aprovado,
+            "aprovado": texto_resposta == "não ofensivo" or texto_resposta == "não ofensivo.",
             "motivo": texto_resposta
         }
 
