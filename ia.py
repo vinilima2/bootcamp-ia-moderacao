@@ -1,14 +1,14 @@
 import openai
 
 # Chave da API inserida diretamente
-openai.api_key = "CHAVE"
+openai.api_key = "CHAVE" 
 
 def analisar_comentario(comentario):
     # Prepara o prompt para a IA
     pergunta = (
         "Você é um moderador. Diga apenas 'ofensivo' ou 'não ofensivo' para o comentário:\n"
         f"{comentario}"
-    )
+    ) 
 
     try:
         # Uso da interface openai-python >=1.0.0
