@@ -1,7 +1,7 @@
 import openai
 
 # Chave da API inserida diretamente
-openai.api_key = "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"
+openai.api_key = "CHAVE"
 
 def analisar_comentario(comentario):
     # Prepara o prompt para a IA
