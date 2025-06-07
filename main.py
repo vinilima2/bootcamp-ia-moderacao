@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request  
+from flask import Flask
+from flask_session import Session
 
 app = Flask(__name__)
 
-@app.route('/')
-def main():
-    return render_template('index.html')
-   
-if __name__ == "__main__": 
-    app.run(host = "0.0.0.0", port = 8080)
+from routes import *
 
-@app.route('/analyse', methods = ["POST"]) 
-def analyse():
-    id_msg, msg = request.get_json().values()
-    return id_msg + ' ' + msg
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, use_reloader = True) 
+
+
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+
+Session(app)    
