@@ -2,7 +2,6 @@ import sqlite3
 import os
 
 def initialize_db():
-    print('caiu')
     db_file = './database/db.db'
     if not os.path.exists(db_file):
         open(db_file, 'w').close()
