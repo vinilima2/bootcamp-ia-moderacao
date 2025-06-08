@@ -1,10 +1,11 @@
-from flask import request, render_template, redirect, session
+from flask import jsonify, request, render_template, redirect, session
 from datetime import datetime
 import uuid
 import bcrypt
 
 from src.dbmanager import DBManager
 from main import app
+from src.ia import analisar_comentario
 
 DATABASE = DBManager("database/db.db")
 
@@ -32,10 +33,14 @@ def main():
 
     return render_template("index.html", posts=posts, usuario=session["name"])
 
-@app.route("/analyse", methods=["POST"])
+@app.route('/analyse', methods=['POST'])
 def analyse():
-    id_msg, msg = request.get_json().values()
-    return f"{id_msg} {msg}"
+    # Corpo da requisição = {id_msg:str, msg:str, id_usuario:str}
+    data = request.get_json()
+    msg = data.get('msg', '')
+    # Chama a função de moderação do ia.py
+    result = analisar_comentario(msg)
+    return jsonify(result)
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
