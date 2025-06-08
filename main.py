@@ -3,7 +3,7 @@ from flask_session import Session
 
 app = Flask(__name__)
 
-from routes import *
+from src.routes import *
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, use_reloader = True) 
