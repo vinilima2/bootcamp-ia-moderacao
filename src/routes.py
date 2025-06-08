@@ -48,6 +48,11 @@ def registro():
         return render_template("cadastro.html")
 
     nome_usuario = request.form.get("usuario")
+
+    # Verifica se o novo nome de usuário está disponível
+    if DATABASE.value_in_column_exists("Usuario", "nome_usuario", nome_usuario) == "True":
+        return jsonify({'error':'O nome de usuário inserido já existe.'}) 
+
     senha = request.form.get("senha")
     senha_hash = bcrypt.hashpw(senha.encode(), bcrypt.gensalt()).decode()
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
@@ -67,7 +72,6 @@ def login():
 
     nome_usuario = request.form.get("usuario")
     senha = request.form.get("senha")
-    
     result = DATABASE.raw_sql(f"""
         SELECT senha FROM Usuario 
         WHERE nome_usuario = '{nome_usuario}'
