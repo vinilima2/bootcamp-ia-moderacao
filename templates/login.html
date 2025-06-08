@@ -4,6 +4,7 @@
 <head>
     <title>Big Forum - Login</title>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='imagens/icone.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -11,8 +12,12 @@
 </head>
 
 <body>
-    <main class="container is-max-tablet mt-4">
-        <h1 class="title is-1 has-text-centered">Entre no Big Forum</h1>
+    <main class="container is-max-tablet mt-4 p-2">
+        <figure class="image" style="text-align: center;justify-content: center;display: flex;">
+            <img src="{{ url_for('static', filename='imagens/icone.png') }}" class="has-text-centered"
+                style="width:40%;" alt="Ícone">
+        </figure>
+        <h1 class="title is-3 has-text-centered has-text-primary">Entre no Big Forum</h1>
         <form action="/login" method="POST" class="box">
             <div class="field">
                 <label class="label">Nome do Usuário</label>
@@ -26,8 +31,8 @@
                     <input class="input" autocomplete="off" type="password" name="senha" required>
                 </div>
             </div>
-            <input type="submit" class="button is-primary is-fullwidth" value="Login">
-            <a href="/registro" class="is-link m-4" type="button">Não tem cadastro? Cadastre-se aqui</a>
+            <input type="submit" class="button is-primary is-fullwidth mb-3" value="Login">
+            <a href="/registro" class="is-link has-text-primary-light" type="button">Não tem cadastro? Cadastre-se aqui</a>
         </form>
     </main>
 </body>
