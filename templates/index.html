@@ -4,31 +4,202 @@
 <head>
   <title>Big Forum</title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='imagens/icone.png') }}" type="image/png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
   <header>
-    <button>>>></button>
-    <h1>Fórum Atual</h1>
-    <button>Usuário</button>
+    <nav class="navbar is-black">
+      <div class="navbar-brand">
+        <a class="navbar-burger is-primary" role="button" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navBarButton" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="#" id="botao-menu">
+            <span class="icon">
+              <i class="fas fa-bars"></i>
+            </span>
+          </a>
+        </div>
+
+        <div class="navbar-center m-2">
+          <h1 class="title is-4">BIG FORUM</h1>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <button class="button is-primary is-outlined" type="button">
+                  <span class="icon">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <span>@{{usuario}}</span>
+                  </a>
+              </p>
+            </div>
+          </div>
+
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <a class="button is-danger is-outline" href="/logout">
+                  <span class="icon">
+                    <i class="fas fa-sign-out"></i>
+                  </span>
+                  <span>Sair</span>
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main>
-    <aside>
-      <ul>
-        <li>Comida</li>
-        <li>Esporte</li>
-        <li>Estilo de vida</li>
-        <li>Moda</li>
-      </ul>
-    </aside>
-    <section>
-      <article>
+    <div class="columns">
+      <div class="column is-3 p-6 has-background-black" style="height: 100vh;" id="menu">
+        <aside class="menu w-20 is-fullheight">
+          <p class="menu-label">Meus Fóruns</p>
+          <ul class="menu-list">
+            <li><a>Esportes</a></li>
+            <li><a>Cultura</a></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="column">
+        {% for post in posts %}
+        <div class="box m-6">
+          <article class="media">
+            <div class="media-left">
+              <figure class="image title">
+                <i class="fas fa-user"></i>
+              </figure>
+            </div>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong>{{post.titulo}}</strong> <small>@{{post.nome_usuario}}</small>
+                  <small>{{post.data_criacao}}</small>
+                  <br />
+                  {{post.descricao}}
+                </p>
+              </div>
+              <nav class="level is-mobile">
+                <div class="level-left">
+                  <a class="level-item comentario" post-id="{{post.post_id}}" aria-label="reply">
+                    <span class="icon is-small">
+                      <i class="fas fa-reply mr-1" aria-hidden="true"></i> Responder
+                    </span>
+                  </a>
+                </div>
+              </nav>
+            </div>
+          </article>
 
-      </article>
-    </section>
+          {% for resposta in post.respostas %}
+          <div class="box m-2">
+            <article class="media">
+              <div class="media-left">
+                <figure class="image is-title">
+                  <i class="fas fa-user"></i>
+                </figure>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    <strong>{{resposta.nome_usuario}}</strong> <small>@{{resposta.data_criacao}}</small>
+                    <br />
+                    {{resposta.descricao}}
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </main>
+
+  <div class="modal modal-post">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form action="/post/novo" method="POST">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Novo Post</p>
+          <button class="delete" aria-label="close" type="button" onclick="alterarModalPost()"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label">Título</label>
+            <div class="control">
+              <input class="input" autocomplete="off" type="text" name="titulo" maxlength="50" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <textarea class="textarea" placeholder="Digite seu comentário" name="descricao" required
+                maxlength="255"></textarea>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button is-success" type="submit">Enviar</button>
+            <button class="button" type="button" id="cancelar-post">Cancelar</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal modal-resposta">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form action="/resposta/novo" method="POST">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Resposta</p>
+          <button class="delete" aria-label="close" type="button" onclick="alterarModalResposta()"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <input class="input is-hidden" id="post_id" autocomplete="off" type="text" name="post_id">
+            <div class="control">
+              <textarea class="textarea" placeholder="Digite seu comentário" name="descricao" required
+                maxlength="255"></textarea>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button is-success" type="submit">Enviar</button>
+            <button class="button" type="button" id="cancelar-resposta">Cancelar</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <button class="button is-medium is-rounded is-primary" id="botao-novo-post"
+    style="position: absolute;bottom: 10px; right: 10px;">
+    <i class="fas fa-plus mr-1"></i> Novo Post
+  </button>
+
+  <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>
 
 </html>

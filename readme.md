@@ -1,5 +1,4 @@
 # Bootcamp IA - Fórum com Moderador de conteúdo
-Versão inicial do projeto...
 
 #### Clonar Repositório
 ```bash
@@ -23,6 +22,11 @@ venv\Scripts\activate
 #### Instalar dependências
 ```bash
 pip install -r requirements.txt
+```
+
+#### Inicializar banco de dados
+```bash
+python ./database/initialize_db.py
 ```
 
 #### Executar Projeto

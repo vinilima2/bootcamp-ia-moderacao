@@ -1,20 +1,15 @@
-from flask import Flask, render_template, request, jsonify
-from ia import analisar_comentario
+from flask import Flask
+from flask_session import Session
 
 app = Flask(__name__)
 
-@app.route('/')
-def main():
-    return render_template('index.html')
+from src.routes import *
 
-@app.route('/analyse', methods=['POST'])
-def analyse():
-    # Corpo da requisição = {id_msg:str, msg:str, id_usuario:str} 
-    data = request.get_json()
-    msg = data.get('msg', '')
-    # Chama a função de moderação do ia.py
-    result = analisar_comentario(msg)
-    return jsonify(result) 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, use_reloader = True)
 
-if __name__ == "__main__": 
-    app.run(debug=True)
+
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+
+Session(app)
