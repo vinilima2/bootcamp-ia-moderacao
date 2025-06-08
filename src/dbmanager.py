@@ -66,6 +66,20 @@ class DBManager:
             return jsonify({'error': str(error)}), 500
         finally:
             db.close()
+    
+    def value_in_column_exists(self, tablename: str, column: str, value: str):
+        try:
+           db = self.get_connection()
+           cursor = db.cursor()
+           cursor.execute("SELECT " + column +" FROM " + tablename + " WHERE " + column + " = '" + value + "'") 
+           response = cursor.fetchone()
+           if len(dict(response or [])) == 0:
+                return "False"
+           return "True"   
+        except sqlite3.Error as error:
+            return jsonify({'error': str(error)}), 500
+        finally:
+            db.close()
 
     def raw_sql(self, sql: str):
         try:
