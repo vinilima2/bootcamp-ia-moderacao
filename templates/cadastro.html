@@ -18,6 +18,7 @@
                 style="width:40%;" alt="Ícone">
         </figure>
         <h1 class="title is-3 has-text-centered has-text-primary">Faça seu cadastro</h1>
+
         <form action="/registro" method="POST" class="box">
             <div class="field">
                 <label class="label">Nome do Usuário</label>
@@ -34,6 +35,13 @@
             <input type="submit" class="button is-primary is-fullwidth" value="Cadastre-se">
         </form>
     </main>
+    {% if retorno != undefined %}
+    <div class="notification is-{{retorno['tipo']}}" style="position: absolute; right: 10px; bottom: 20px;">
+        <button class="delete" type="button"></button>
+        <strong>{{retorno['titulo']}}:</strong> {{retorno['mensagem']}}
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>
 
 </html>

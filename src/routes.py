@@ -51,7 +51,7 @@ def registro():
 
     # Verifica se o novo nome de usuário está disponível
     if DATABASE.value_in_column_exists("Usuario", "nome_usuario", nome_usuario) == "True":
-        return jsonify({'error':'O nome de usuário inserido já existe.'}) 
+        return render_template("cadastro.html", retorno={'titulo':'Atenção','mensagem':'O nome de usuário inserido já existe.', 'tipo': 'warning'})
 
     senha = request.form.get("senha")
     senha_hash = bcrypt.hashpw(senha.encode(), bcrypt.gensalt()).decode()
@@ -80,7 +80,8 @@ def login():
     if result and bcrypt.checkpw(senha.encode(), result[0]["senha"].encode()):
         session["name"] = nome_usuario
         return redirect("/")
-    return render_template("login.html")
+    
+    return render_template("login.html", retorno={'titulo':'Atenção','mensagem':'Usuário ou senha inválidos.', 'tipo': 'warning'})
 
 @app.route("/logout")
 def logout():
