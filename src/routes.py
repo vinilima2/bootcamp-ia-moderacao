@@ -1,5 +1,7 @@
+import os
 from flask import flash, jsonify, request, render_template, redirect, session
 from datetime import datetime
+from dotenv import load_dotenv
 import uuid
 import bcrypt
 
@@ -9,8 +11,11 @@ from src.ia import analisar_comentario
 
 DATABASE = DBManager("database/db.db")
 
+load_dotenv()
+
 @app.route("/")
 def main():
+    print(os.environ.get('OPENAI_API_KEY'))
     if "name" not in session:
         return redirect("/login")
 

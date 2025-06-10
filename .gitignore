@@ -4,3 +4,4 @@ venv
 *.pyc 
 flask_session
 *.db
+.env

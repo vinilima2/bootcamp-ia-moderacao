@@ -1,7 +1,8 @@
+import os
 import openai
 
 # Chave da API inserida diretamente
-openai.api_key = "CHAVE" 
+openai.api_key = os.environ.get('OPENAI_API_KEY')
 
 def analisar_comentario(comentario):
     # Prepara o prompt para a IA
