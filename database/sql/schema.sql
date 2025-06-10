@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS Resposta (
 	descricao  VARCHAR(255) NOT NULL,
 	usuario_id TEXT,
 	data_criacao TEXT NOT NULL,
+	bloqueado	INTEGER(1) NOT NULL DEFAULT (0),
 	PRIMARY KEY(resposta_id),
 	FOREIGN KEY(post_id) REFERENCES Post(post_id),
 	FOREIGN KEY(usuario_id) REFERENCES Usuario(usuario_id)

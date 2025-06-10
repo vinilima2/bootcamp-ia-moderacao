@@ -89,13 +89,18 @@
             </div>
             <div class="media-content">
               <div class="content">
+                {% if post.bloqueado == 0 %}
                 <p>
                   <strong>{{post.titulo}}</strong> <small>@{{post.nome_usuario}}</small>
                   | <small>{{post.data_criacao}}</small>
                   <br />
                   {{post.descricao}}
                 </p>
+                {% else %}
+                <p><strong>Conteúdo bloqueado</strong> por ferir as diretrizes da comunidade</p>
+                {% endif %}
               </div>
+              {% if post.bloqueado == 0 %}
               <nav class="level is-mobile">
                 <div class="level-left">
                   <a class="level-item comentario" post-id="{{post.post_id}}" aria-label="responder">
@@ -105,6 +110,7 @@
                   </a>
                 </div>
               </nav>
+              {% endif %}
             </div>
           </article>
 
@@ -118,11 +124,15 @@
               </div>
               <div class="media-content">
                 <div class="content">
+                  {% if resposta.bloqueado == 0 %}
                   <p>
                     <strong>{{resposta.nome_usuario}}</strong> | <small>{{resposta.data_criacao}}</small>
                     <br />
                     {{resposta.descricao}}
                   </p>
+                  {% else %}
+                  <p><strong>Conteúdo bloqueado</strong> por ferir as diretrizes da comunidade</p>
+                  {% endif %}
                 </div>
               </div>
             </article>
@@ -201,6 +211,27 @@
   </button>
 
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+
+  {% if retorno != undefined %}
+  <div class="notification is-{{retorno['tipo']}}" style="position: absolute; right: 10px; bottom: 20px;">
+    <button class="delete" type="button"></button>
+    <strong>{{retorno['titulo']}}:</strong> {{retorno['mensagem']}}
+  </div>
+  {% endif %}
+
+
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="notification is-{{category == 'error' and 'danger' or 'warning'}}"
+    style="position: absolute; right: 10px; bottom: 20px;">
+    <button class="delete" type="button"></button>
+    <strong>Post bloqueado</strong> {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 </body>
 
 </html>

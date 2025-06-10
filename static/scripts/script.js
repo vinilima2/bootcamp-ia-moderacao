@@ -25,5 +25,5 @@ document.querySelector('.delete')?.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.querySelector('.notification')?.classList.add('is-hidden')
-    }, 2000)
+    }, 5000)
 })

@@ -1,4 +1,4 @@
-from flask import jsonify, request, render_template, redirect, session
+from flask import flash, jsonify, request, render_template, redirect, session
 from datetime import datetime
 import uuid
 import bcrypt
@@ -98,14 +98,22 @@ def novo_post():
     usuario_id = get_usuario_id(session["name"])
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
+    titulo_avaliado = analisar_comentario(titulo)
+    descricao_avaliada = analisar_comentario(descricao)
+    bloqueado = not titulo_avaliado['aprovado'] or not descricao_avaliada['aprovado']
+
     DATABASE.insert_all("Post", [
         f"'{uuid.uuid4()}'",
         f"'{titulo}'",
         f"'{descricao}'",
         f"'{datahora}'",
         f"'{usuario_id}'",
-        "0"
+        bloqueado and "1" or "0"
     ])
+
+    if bloqueado:
+        flash('Post bloqueado, por ferir diretrizes da comunidade.', 'error')
+
     return redirect("/")
 
 @app.route("/resposta/novo", methods=["POST"])
@@ -118,13 +126,21 @@ def nova_resposta():
     usuario_id = get_usuario_id(session["name"])
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
+    descricao_avaliada = analisar_comentario(descricao)
+    bloqueado = not descricao_avaliada['aprovado']
+
     DATABASE.insert_all("Resposta", [
         f"'{uuid.uuid4()}'",
         f"'{post_id}'",
         f"'{descricao}'",
         f"'{usuario_id}'",
-        f"'{datahora}'"
+        f"'{datahora}'",
+        bloqueado and "1" or "0"
     ])
+
+    if bloqueado:
+        flash('Resposta bloqueada, por ferir diretrizes da comunidade.', 'error')
+    
     return redirect("/")
 
 def get_usuario_id(nome_usuario):
