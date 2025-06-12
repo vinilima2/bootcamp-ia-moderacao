@@ -1,5 +1,4 @@
-import os
-from flask import flash, jsonify, request, render_template, redirect, session
+from flask import flash, request, render_template, redirect, session
 from datetime import datetime
 from dotenv import load_dotenv
 import uuid
@@ -15,7 +14,6 @@ load_dotenv()
 
 @app.route("/")
 def main():
-    print(os.environ.get('OPENAI_API_KEY'))
     if "name" not in session:
         return redirect("/login")
 
@@ -38,15 +36,6 @@ def main():
 
     return render_template("index.html", posts=posts, usuario=session["name"])
 
-@app.route('/analyse', methods=['POST'])
-def analyse():
-    # Corpo da requisição = {id_msg:str, msg:str, id_usuario:str}
-    data = request.get_json()
-    msg = data.get('msg', '')
-    # Chama a função de moderação do ia.py
-    result = analisar_comentario(msg)
-    return jsonify(result)
-
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "GET":
@@ -56,7 +45,8 @@ def registro():
 
     # Verifica se o novo nome de usuário está disponível
     if DATABASE.value_in_column_exists("Usuario", "nome_usuario", nome_usuario) == "True":
-        return render_template("cadastro.html", retorno={'titulo':'Atenção','mensagem':'O nome de usuário inserido já existe.', 'tipo': 'warning'})
+        flash('Atenção, O nome de usuário inserido já existe.', 'warning')
+        return redirect("/registro")
 
     senha = request.form.get("senha")
     senha_hash = bcrypt.hashpw(senha.encode(), bcrypt.gensalt()).decode()
@@ -86,7 +76,8 @@ def login():
         session["name"] = nome_usuario
         return redirect("/")
     
-    return render_template("login.html", retorno={'titulo':'Atenção','mensagem':'Usuário ou senha inválidos.', 'tipo': 'warning'})
+    flash('Atenção, Usuário ou senha inválidos.', 'warning')
+    return redirect("/login")
 
 @app.route("/logout")
 def logout():
@@ -103,9 +94,13 @@ def novo_post():
     usuario_id = get_usuario_id(session["name"])
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
-    titulo_avaliado = analisar_comentario(titulo)
-    descricao_avaliada = analisar_comentario(descricao)
-    bloqueado = not titulo_avaliado['aprovado'] or not descricao_avaliada['aprovado']
+    texto_avaliado = analisar_comentario(titulo + ": " + descricao)
+    
+    if texto_avaliado['erro']:
+       flash(texto_avaliado['motivo'], 'error')
+       return redirect("/")
+
+    bloqueado = not texto_avaliado['aprovado']
 
     DATABASE.insert_all("Post", [
         f"'{uuid.uuid4()}'",
@@ -131,8 +126,13 @@ def nova_resposta():
     usuario_id = get_usuario_id(session["name"])
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
-    descricao_avaliada = analisar_comentario(descricao)
-    bloqueado = not descricao_avaliada['aprovado']
+    texto_avaliado = analisar_comentario(descricao)
+
+    if texto_avaliado['erro']:
+       flash(texto_avaliado['motivo'], 'error')
+       return redirect("/")
+       
+    bloqueado = not texto_avaliado['aprovado']
 
     DATABASE.insert_all("Resposta", [
         f"'{uuid.uuid4()}'",

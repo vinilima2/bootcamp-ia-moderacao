@@ -33,7 +33,9 @@ def analisar_comentario(comentario):
 
     except Exception as erro:
         # Retorna mensagem de erro para debug
+        print(erro)
         return {
+            "erro": True,
             "aprovado": False,
-            "motivo": f"Erro ao usar a IA: {erro}"
+            "motivo": f"Problemas ao analisar sua mensagem, tente novamente mais tarde."
         }
