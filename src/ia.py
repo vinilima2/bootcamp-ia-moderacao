@@ -27,6 +27,7 @@ def analisar_comentario(comentario):
         texto_resposta = resposta.choices[0].message.content.strip().lower()
 
         return {
+            "erro": False,
             "aprovado": texto_resposta == "não ofensivo" or texto_resposta == "não ofensivo.",
             "motivo": texto_resposta
         }

@@ -95,8 +95,8 @@ def novo_post():
     datahora = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
     texto_avaliado = analisar_comentario(titulo + ": " + descricao)
-    
-    if texto_avaliado['erro']:
+
+    if texto_avaliado['erro'] == True:
        flash(texto_avaliado['motivo'], 'error')
        return redirect("/")
 
@@ -128,7 +128,7 @@ def nova_resposta():
 
     texto_avaliado = analisar_comentario(descricao)
 
-    if texto_avaliado['erro']:
+    if texto_avaliado['erro'] == True:
        flash(texto_avaliado['motivo'], 'error')
        return redirect("/")
        
