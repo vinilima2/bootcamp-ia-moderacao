@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" type="text/css">
 </head>
 
 <body>
     <main class="container is-max-tablet mt-4 p-2">
-        <figure class="image" style="text-align: center;justify-content: center;display: flex;">
-            <img src="{{ url_for('static', filename='imagens/icone.png') }}" class="has-text-centered"
-                style="width:40%;" alt="Ícone">
+        <figure class="image is-justify-content-center is-display-flex">
+            <img src="{{ url_for('static', filename='imagens/icone.png') }}" class="has-text-centered" alt="Ícone">
         </figure>
         <h1 class="title is-3 has-text-centered has-text-primary">Faça seu cadastro</h1>
 
@@ -35,12 +35,16 @@
             <input type="submit" class="button is-primary is-fullwidth" value="Cadastre-se">
         </form>
     </main>
-    {% if retorno != undefined %}
-    <div class="notification is-{{retorno['tipo']}}" style="position: absolute; right: 10px; bottom: 20px;">
-        <button class="delete" type="button"></button>
-        <strong>{{retorno['titulo']}}:</strong> {{retorno['mensagem']}}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="notification is-{{category == 'error' and 'danger' or 'warning'}}" id="mensagem">
+        <button class="delete" type="button" onclick="fecharNotificacao()"></button>
+        <strong>{{message}}</strong>
     </div>
+    {% endfor %}
     {% endif %}
+    {% endwith %}
     <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>
 

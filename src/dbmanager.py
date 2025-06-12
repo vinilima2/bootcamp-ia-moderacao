@@ -46,7 +46,6 @@ class DBManager:
         try:
            db = self.get_connection()
            cursor = db.cursor()
-           print(",".join(values))
            cursor.execute("INSERT INTO {table} VALUES ({values});".format(table=tablename, values=",".join(values))) 
            db.commit()
            return jsonify({'message': 'Inserido com sucesso.'}) 

@@ -1,5 +1,13 @@
+if (localStorage.getItem('ocultar-menu') === 'true') {
+    document.getElementById('menu')?.classList.toggle('is-hidden')
+}
+
 const toggleModal = (seletor) => {
     document.querySelector(seletor)?.classList.toggle('is-active')
+}
+
+const fecharNotificacao = () => {
+    document.querySelector('.notification')?.classList.add('is-hidden')
 }
 
 document.getElementById('botao-novo-post')?.addEventListener('click', () => toggleModal('.modal-post'))
@@ -15,12 +23,11 @@ document.querySelectorAll('.comentario')?.forEach(element => {
 })
 
 document.getElementById('botao-menu')?.addEventListener('click', () => {
+    const menuInativo = document.getElementById('menu').classList.contains('is-hidden')
+    localStorage.setItem('ocultar-menu', !menuInativo)
     document.getElementById('menu')?.classList.toggle('is-hidden')
 })
 
-document.querySelector('.delete')?.addEventListener('click', () => {
-    document.querySelector('.notification')?.classList.add('is-hidden')
-})
 
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
